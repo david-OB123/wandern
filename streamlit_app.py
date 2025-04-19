@@ -22,15 +22,23 @@ def make_map(track: pd.DataFrame, zoom_start: int=15):
     #
     return map
 
-#
-st.sidebar.title("Sidebar Title")
-st.sidebar.markdown("This is the sidebar content")
 
 #
-st.write("Hello ,let's learn how to build a streamlit app together")
-# 
+tracks = pd.read_parquet('data.parquet')
+
+
+#### Sidebar
+# st.sidebar.title("Sidebar Title")
+# st.sidebar.markdown("This is the sidebar content")
+option = st.sidebar.selectbox(
+    label='Choose your tour.',
+    options=tracks['name'].unique()
+)
+
+st.write('Your selected tour:', option)
 
 # Call to render Folium map in Streamlit
-track = pd.read_parquet('data.parquet')
+track = tracks.loc[lambda x: x['name']==option]
 map = make_map(track)
 st_data = st_folium(map) # , width=725
+# st.write(tracks.loc[lambda x: x['name']==option])
