@@ -1,22 +1,7 @@
 import pandas as pd
-import gpxpy
 import folium
 import streamlit as st
 from streamlit_folium import st_folium
-
-
-def read_gpx_track(filepath: str) -> pd.DataFrame:
-    #
-    gpx_file = open(filepath, 'r')
-    gpx = gpxpy.parse(gpx_file)
-    #
-    res = []
-    for track in gpx.tracks:
-        for segment in track.segments:
-            for point in segment.points:
-                res.append([point.latitude, point.longitude, point.elevation])
-    #
-    return pd.DataFrame(res, columns=['latitude', 'longitude', 'elevation'])
 
 def make_map(track: pd.DataFrame, zoom_start: int=15):
     #
@@ -46,6 +31,6 @@ st.write("Hello ,let's learn how to build a streamlit app together")
 # 
 
 # Call to render Folium map in Streamlit
-track = read_gpx_track(filepath='../BRA3.gpx')
+track = pd.read_parquet('data.parquet')
 map = make_map(track)
 st_data = st_folium(map) # , width=725
